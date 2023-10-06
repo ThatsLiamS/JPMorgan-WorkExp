@@ -1,0 +1,85 @@
+From 4b2c42d2137df4f97b3bc9c5ce22f2e8ef496746 Mon Sep 17 00:00:00 2001
+From: Liam Skinner <Liamdavidskinner@gmail.com>
+Date: Fri, 6 Oct 2023 10:30:37 +0100
+Subject: [PATCH] TaskOne: fix the data feed
+
+---
+ Task 1 Interface with Data Feed/client3.py     | 15 ++++++++-------
+ Task 1 Interface with Data Feed/client_test.py | 11 +++++------
+ 2 files changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/Task 1 Interface with Data Feed/client3.py b/Task 1 Interface with Data Feed/client3.py
+index 3fc09b7..a232187 100644
+--- a/Task 1 Interface with Data Feed/client3.py	
++++ b/Task 1 Interface with Data Feed/client3.py	
+@@ -30,19 +30,19 @@ N = 500
+ 
+ 
+ def getDataPoint(quote):
+-    """ Produce all the needed values to generate a datapoint """
+-    """ ------------- Update this function ------------- """
++    """ Produce all the needed values to generate a data point """
+     stock = quote['stock']
+     bid_price = float(quote['top_bid']['price'])
+     ask_price = float(quote['top_ask']['price'])
+-    price = bid_price
++    price = (bid_price + ask_price) / 2
+     return stock, bid_price, ask_price, price
+ 
+ 
+ def getRatio(price_a, price_b):
+     """ Get ratio of price_a and price_b """
+-    """ ------------- Update this function ------------- """
+-    return 1
++    if (price_b == 0):
++        return
++    return price_a / price_b
+ 
+ 
+ # Main
+@@ -51,9 +51,10 @@ if __name__ == "__main__":
+     for _ in iter(range(N)):
+         quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
+ 
+-        """ ----------- Update to get the ratio --------------- """
++        prices = {}
+         for quote in quotes:
+             stock, bid_price, ask_price, price = getDataPoint(quote)
++            prices[stock] = price
+             print("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
+ 
+-        print("Ratio %s" % getRatio(price, price))
++        print("Ratio %s" % getRatio(prices["ABC"], prices["DEF"]))
+diff --git a/Task 1 Interface with Data Feed/client_test.py b/Task 1 Interface with Data Feed/client_test.py
+index af2bf26..00496c3 100644
+--- a/Task 1 Interface with Data Feed/client_test.py	
++++ b/Task 1 Interface with Data Feed/client_test.py	
+@@ -7,19 +7,18 @@ class ClientTest(unittest.TestCase):
+       {'top_ask': {'price': 121.2, 'size': 36}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 120.48, 'size': 109}, 'id': '0.109974697771', 'stock': 'ABC'},
+       {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
+     ]
+-    """ ------------ Add the assertion below ------------ """
++    for quote in quotes:
++      self.assertEqual(getDataPoint(quote), (quote['stock'], quote['top_bid']['price'], quote['top_ask']['price'], (quote['top_bid']['price'] + quote['top_ask']['price'])/2))
+ 
+   def test_getDataPoint_calculatePriceBidGreaterThanAsk(self):
+     quotes = [
+       {'top_ask': {'price': 119.2, 'size': 36}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 120.48, 'size': 109}, 'id': '0.109974697771', 'stock': 'ABC'},
+       {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
+     ]
+-    """ ------------ Add the assertion below ------------ """
+-
+-
+-  """ ------------ Add more unit tests ------------ """
++    for quote in quotes:
++      self.assertEqual(getDataPoint(quote), (quote['stock'], quote['top_bid']['price'], quote['top_ask']['price'], (quote['top_bid']['price'] + quote['top_ask']['price'])/2))
+ 
+ 
+ 
+ if __name__ == '__main__':
+-    unittest.main()
++  unittest.main()
+\ No newline at end of file
+-- 
+2.37.3.windows.1
+
