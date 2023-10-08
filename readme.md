@@ -33,3 +33,9 @@ Being able to access and adjust data feeds is critical to trading analysis and s
 For traders to have a complete picture of all the trading strategies being monitored, several screens typically display an assortment of live and historical data at their workstations.
 
 Given that an enormous amount of information and data are produced at once, visualising data in a clear manner with UI/UX considerations accounted for is critical to providing traders with the tools to improve their performance.
+
+## Task Four
+
+You work in the credit rewards department at JPMorgan Chase. Your team handles conversions from dollars to credit card points, credit card points to miles, miles to credit card points, and so on. Today, you are working on a ticket involving the RewardsConverter system, which needs a new part to function. This system is missing a crucial class, which you’ll be creating over the course of this program. 
+
+The RewardsConverter system accepts a cash value and returns the corresponding value in airline miles. The system needs a RewardValue class to function, which represents the correspondence between currencies, be it cash, airline miles, or something else. It will handle the conversion between all of these scales. In this task, you will set up your local development environment for coding and implement the aforementioned class.
